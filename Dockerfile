@@ -4,9 +4,12 @@ RUN a2enmod rewrite ssl headers expires
 
 RUN apt-get update
 
-RUN apt-get install -y libpq-dev libzip-dev zip poppler-utils
+RUN apt-get install -y libpq-dev libzip-dev zip poppler-utils librdkafka-dev
 
 RUN docker-php-ext-install pdo pdo_mysql zip
+
+RUN pecl install rdkafka \
+    && docker-php-ext-enable rdkafka
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 

@@ -5,7 +5,6 @@ services:
         container_name: php
         image: php:8.2-apache
         user: "1000:1000"
-        build: .
         ports:
             - "80:80"
         volumes:
@@ -26,6 +25,39 @@ services:
         environment:
             MYSQL_DATABASE: appmax
             MYSQL_ROOT_PASSWORD: appmax
+        networks:
+            - default
+
+    zookeeper:
+        container_name: zookeeper
+        image: "bitnami/zookeeper:latest"
+        ports:
+            - "2181:2181"
+        environment:
+            ALLOW_ANONYMOUS_LOGIN: yes
+        networks:
+            - default
+
+    kafka:
+        container_name: kafka
+        image: "bitnami/kafka:3.3.2-debian-11-r183"
+        ports:
+            - "9092:9092"
+            - "29092:29092"
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
+            KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+            KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+            KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+            KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+            ADVERTISED_HOST: localhost
+        healthcheck:
+            test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server 127.0.0.1:9092 --list"]
+            interval: 5s
+            retries: 10
+        depends_on:
+            - zookeeper
         networks:
             - default
 
