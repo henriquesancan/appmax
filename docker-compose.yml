@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+    php:
+        container_name: php
+        image: php:8.2-apache
+        user: "1000:1000"
+        build: .
+        ports:
+            - "80:80"
+        volumes:
+            - ./:/var/www/html
+            - ./docker/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
+        depends_on:
+            - mysql
+        networks:
+            - default
+
+    mysql:
+        container_name: mysql
+        image: mysql:latest
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./docker/mysql:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: appmax
+            MYSQL_ROOT_PASSWORD: appmax
+        networks:
+            - default
+
+volumes:
+    downloads:
+        driver: local
+
+networks:
+    default:
+        driver: bridge
