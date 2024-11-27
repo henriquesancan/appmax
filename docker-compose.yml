@@ -27,6 +27,10 @@ services:
             MYSQL_ROOT_PASSWORD: appmax
         networks:
             - default
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "--host=localhost"]
+            interval: 10s
+            retries: 5
 
     zookeeper:
         container_name: zookeeper
