@@ -4,6 +4,9 @@ services:
     php:
         container_name: php
         image: php:8.2-apache
+        build:
+            context: .
+            dockerfile: Dockerfile
         user: "1000:1000"
         ports:
             - "80:80"

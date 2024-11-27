@@ -1,13 +1,14 @@
 FROM php:8.2-apache
 
-RUN sudo a2enmod rewrite ssl headers expires
+RUN a2enmod rewrite ssl headers expires
 
-RUN sudo apt-get update && sudo apt-get install -y \
+RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     zip \
     poppler-utils \
-    librdkafka-dev
+    librdkafka-dev \
+    default-mysql-client
 
 RUN docker-php-ext-install pdo pdo_mysql zip
 
