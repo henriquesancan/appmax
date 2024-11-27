@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -16,6 +15,9 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
+/**
+ * @OA\Info(title="API", version="1.0")
+ */
 class UserController extends Controller
 {
     /**
@@ -27,7 +29,70 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/user",
+     *     summary="Store a new user",
+     *     description="Creates a new user in the system with the provided details.",
+     *     operationId="storeUser",
+     *     tags={"User"},
+     *     requestBody={
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 required={"name", "document", "email", "password"},
+     *                 @OA\Property(property="name", type="string", description="The name of the user", example="John Doe"),
+     *                 @OA\Property(property="document", type="string", description="The user's document (CPF)", example="12345678901"),
+     *                 @OA\Property(property="email", type="string", description="The user's email address", example="john.doe@example.com"),
+     *                 @OA\Property(property="password", type="string", description="The user's password", example="secret1234"),
+     *                 @OA\Property(property="password_confirmation", type="string", description="Password confirmation", example="secret1234")
+     *             )
+     *         )
+     *     },
+     *     @OA\Response(
+     *         response="201",
+     *         description="User created successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="John Doe"),
+     *                 @OA\Property(property="document", type="string", example="12345678901"),
+     *                 @OA\Property(property="email", type="string", example="john.doe@example.com"),
+     *                 @OA\Property(property="token", type="string", example="your_token_here")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request, validation error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="errors", type="array", items=@OA\Items(type="string"), example={"Invalid email format"})
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="422",
+     *         description="Unprocessable entity, validation error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="errors", type="array", items=@OA\Items(type="string"), example={"Email is already taken"})
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="errors", type="string", example="An unexpected error occurred")
+     *         )
+     *     )
+     * )
      */
     public function store(Request $request): JsonResponse
     {

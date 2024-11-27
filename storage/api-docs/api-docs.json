@@ -1,0 +1,183 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/user": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Store a new user",
+                "description": "Creates a new user in the system with the provided details.",
+                "operationId": "storeUser",
+                "requestBody": [
+                    {
+                        "mediaType": "application/json",
+                        "schema": {
+                            "required": [
+                                "name",
+                                "document",
+                                "email",
+                                "password"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "description": "The name of the user",
+                                    "type": "string",
+                                    "example": "John Doe"
+                                },
+                                "document": {
+                                    "description": "The user's document (CPF)",
+                                    "type": "string",
+                                    "example": "12345678901"
+                                },
+                                "email": {
+                                    "description": "The user's email address",
+                                    "type": "string",
+                                    "example": "john.doe@example.com"
+                                },
+                                "password": {
+                                    "description": "The user's password",
+                                    "type": "string",
+                                    "example": "secret1234"
+                                },
+                                "password_confirmation": {
+                                    "description": "Password confirmation",
+                                    "type": "string",
+                                    "example": "secret1234"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "document": {
+                                                    "type": "string",
+                                                    "example": "12345678901"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john.doe@example.com"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "your_token_here"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request, validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": [
+                                                "Invalid email format"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable entity, validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": [
+                                                "Email is already taken"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "errors": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "User",
+            "description": "User"
+        }
+    ]
+}
